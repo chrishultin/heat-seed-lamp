@@ -1,0 +1,129 @@
+heat_template_version: 2015-10-15
+
+description: Cloud Server
+
+parameters:
+  stack_name:
+    type: string
+  db_name:
+    type: string
+  db_user:
+    type: string
+  clouddb_flavor:
+    type: string
+  clouddb_disk:
+    type: string
+  server_image:
+    type: string
+  server_flavor:
+    type: string
+  ssh_key:
+    type: string
+  ansible_source:
+    type: string
+
+resources:
+  database_pass:
+    type: OS::Heat::RandomString
+  holland_pass:
+    type: OS::Heat::RandomString
+  root_pass:
+    type: OS::Heat::RandomString
+  #DB Server
+  database_server:
+    type: OS::Nova::Server
+    properties:
+      name:
+        str_replace:
+          template: stack-Database
+          params:
+            stack: { get_param: "OS::stack_name" }
+      image: { get_param: server_image }
+      flavor: { get_param: server_flavor }
+      key_name: { get_resource: ssh_key }
+      software_config_transport: POLL_TEMP_URL
+      config_drive: true
+      user_data_format: SOFTWARE_CONFIG
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+        build_config: "backup_agent_only,monitoring_defaults"
+  #DB Software Configuration
+  database_config:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      group: ansible
+      config: |
+        ---
+        - name: Install and configure MySQL
+          hosts: localhost
+          connection: local
+          roles:
+          - common
+          - apache
+          - php
+          - mysql
+          - holland
+          - phpmyadmin
+  #DB Software deployment
+  deploy_database:
+    type: OS::Heat::SoftwareDeployment
+    depends_on: deploy_db_roles
+    properties:
+      signal_transport: TEMP_URL_SIGNAL
+      input_values:
+        apache_default_domain: { get_param: lamp_url }
+        tz: "America/Chicago"
+        mysql_root_password: { get_attr: [root_pass, value] }
+        mysql_default_user: { get_param: db_user }
+        mysql_default_user_password: { get_attr: [database_pass, value] }
+        mysql_default_database: { get_param: db_name }
+        holland_mysql_user: "holland"
+        holland_mysql_password: {  get_attr: [holland_pass, value] }
+        holland_mysql_host: localhost
+        holland_create_user: "yes"
+        phpmyadmin_install: { get_param: php_myadmin }
+        phpmyadmin_host: localhost
+        phpmyadmin_user: { get_param: db_user }
+        phpmyadmin_pass: { get_attr: [database_pass, value] }
+      config:
+        get_resource: database_config
+      server:
+        get_resource: database_server
+  #DB Deploy Ansible Roles
+  deploy_db_roles:
+    type: OS::Heat::SoftwareDeployment
+    properties:
+      signal_transport: TEMP_URL_SIGNAL
+      config:
+        get_resource: upload_role_config
+      server:
+        get_resource: database_server
+
+  #Software Configurations
+  upload_role_config:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      group: script
+      outputs:
+      - name: results
+      config:
+        str_replace:
+          template: |
+            #!/bin/bash
+            set -e
+            mkdir -p /etc/ansible/roles
+            wget ansible_source -O /tmp/ansible-roles.tar.gz 2>&1
+            tar -xf /tmp/ansible-roles.tar.gz --strip-components=1 -C /etc/ansible/roles
+          params:
+            ansible_source: { get_param: ansible_source }
+
+outputs:
+  mysql_password:
+    value:
+      get_attr: [database_pass, value]
+  mysql_host:
+    value:
+      get_attr: [database_server, accessIPv4]
+  root_pass:
+    value:
+      get_attr: [root_pass, value]

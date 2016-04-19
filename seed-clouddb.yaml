@@ -1,0 +1,62 @@
+heat_template_version: 2015-10-15
+
+description: Cloud Database
+
+parameters:
+  stack_name:
+    type: string
+  db_name:
+    type: string
+  db_user:
+    type: string
+  clouddb_flavor:
+    type: string
+  clouddb_disk:
+    type: string
+  server_image:
+    type: string
+  server_flavor:
+    type: string
+  ssh_key:
+    type: string
+  ansible_source:
+    type: string
+
+resources:
+  database_pass:
+    type: OS::Heat::RandomString
+  holland_pass:
+    type: OS::Heat::RandomString
+  root_pass:
+    type: OS::Heat::RandomString
+  lamp_database:
+    type: OS::Trove::Instance
+    properties:
+      name:
+        str_replace:
+          template: stack_Database
+          params:
+            stack: { get_param: "OS::stack_name" }
+      flavor: { get_param: database_flavor }
+      size: { get_param: database_disk }
+      datastore_type: mysql
+      databases:
+      - name: { get_param: db_name }
+      - name: phpmyadmin
+      users:
+      - name: { get_param: db_user }
+        password: { get_attr: [database_pass, value] }
+        databases: [ { get_param: db_name } , phpmyadmin]
+      - name: holland
+        password: { get_attr: [holland_pass, value] }
+        databases: [ { get_param: db_name } , phpmyadmin]
+
+outputs:
+  mysql_password:
+    value:
+      get_attr: [database_pass, value]
+  mysql_host:
+    value:
+      get_attr: [lamp_database, hostname]
+  root_pass:
+    value: ''

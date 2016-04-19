@@ -1,0 +1,110 @@
+schema-version: 1.0.0
+application-family: Application Frameworks
+application-name: LAMP
+flavor: Production
+flavor-weight: 1
+popularity: 1
+reach-info:
+  icon-20x20: https://0b5294b243620310a700-e388a7f3aba385a925111b1fc6f680d4.ssl.cf2.rackcdn.com/lamp-icon-20x20.png
+  tattoo: https://0b5294b243620310a700-e388a7f3aba385a925111b1fc6f680d4.ssl.cf2.rackcdn.com/lamp-tattoo.png
+  card-icon: https://0b5294b243620310a700-e388a7f3aba385a925111b1fc6f680d4.ssl.cf2.rackcdn.com/lamp_logo.svg
+hidden_outputs:
+  - lampmyadmin_url
+  - mysql_user
+  - mysql_password
+  - ssh_private_key
+abstract: |
+  LAMP is a software stack containing the following open-source components:
+  Linux, Apache, MySQL and PHP
+instructions: |
+  #### Getting Started
+  If you're new to PHP, the [Getting
+  Started](http://www.php.net/manual/en/getting-started.php) page can walk you
+  through the basics of PHP and it's uses.
+
+  If you chose to enable PHPMyAdmin, you can access it using the username and
+  password found in the Credentials section, with the URL listed under
+  PHPMyAdmin URL.
+
+  #### Scaling out
+  This deployment is configured to be able to scale out easily.  However,
+  if you are expecting higher levels of traffic, please look into one of our
+  larger-scale stacks.
+
+  #### Details of Your Setup
+  This deployment was stood up using [Ansible](http://www.ansible.com/).
+  Once the stack has been deployed, Ansible will not run again unless you update the
+  stack. **Any changes made to the configuration may be overwritten when the stack
+  is updated.**
+
+  [Apache](http://www.apache.org/) was configured to serve contents out
+  of /var/www/vhosts/example.com/, where example.com is the domain that
+  you provided during the setup.
+  
+  [PHP](http://www.php.net/) was installed using the packaged version for
+  the chosen operating system, in order to ensure that you have the latest
+  stable release.
+
+  [Lsyncd](https://github.com/axkibe/lsyncd) has been installed in order to
+  sync static content from the Master server to all secondary servers.
+  When uploading content, it only needs to be uploaded to the Master node,
+  and will be automatically synchronized to all secondary nodes.  By default,
+  /var/www will be synchronized, unless otherwise specified during setup.
+
+  MySQL is being hosted on a Cloud Database instance, running MySQL 5.6.
+  Backups for MySQL are provided by [Holland](http://wiki.hollandbackup.org/),
+  which is running on the Master server.
+
+  Backups are configured using Cloud Backups.  The Master server is configured
+  to back up /var/spool/holland and /var/www once per week, and to retain
+  these backups for 30 days.
+
+  In order to restore the Database from backup, you will need to first restore
+  /var/spool/holland from the appropriate Cloud Backup.  After you have done so,
+  you will need to log into the Master server and restore the Holland backup
+  to the Cloud Database via the MySQL client.  For more assistance, please
+  contact your Support team.
+
+  Monitoring is configured to verify that Apache is running on both the Master
+  and all secondary servers, as well as that the Cloud Load Balancer is
+  functioning.  Additionally, the default CPU, RAM, and Filesystem checks
+  are in place on all servers.
+
+  #### Logging in via SSH
+  The private key provided with this deployment can be used to log in as
+  root via SSH. We have an article on how to use these keys with [Mac OS X and
+  Linux](http://www.rackspace.com/knowledge_center/article/logging-in-with-a-ssh-private-key-on-linuxmac)
+  as well as [Windows using
+  PuTTY](http://www.rackspace.com/knowledge_center/article/logging-in-with-a-ssh-private-key-on-windows).
+  This key can be used to log into all servers on this deployment.
+  Additionally, passwordless authentication is configured from the Master
+  server to all secondary servers.
+
+  #### Additional Notes
+  You can add additional servers to this deployment by updating the
+  "server_count" parameter for this stack. This deployment is
+  intended for low to medium traffic production websites and can be
+  scaled as needed to accommodate future growth.
+
+  When scaling this deployment by adjusting the "server_count" parameter,
+  make sure that you DO NOT change the "database_flavor" and "database_disk"
+  parameters, as this will result in the loss of all data within the
+  database.
+  
+  This stack will not ensure that LAMP or the servers themselves are
+  up-to-date.  You are responsible for ensuring that all software is
+  updated.
+user-input-required: true
+description: |
+ This stack is intended for low to medium traffic production
+ websites and can be scaled as needed to accommodate future
+ growth.  This stack includes a Cloud Load Balancer, Cloud
+ Database, and a Master server (plus optional secondary
+ servers).  It also includes Cloud Monitoring and Cloud
+ Backups.
+
+ This stack is running the latest version of
+ [Apache](https://www.apache.org//),
+ and [PHP](http://www.php.net/).
+ with a Cloud Database running
+ [MySQL 5.6](http://www.mysql.com/about/).
