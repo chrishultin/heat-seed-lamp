@@ -186,11 +186,11 @@ resources:
           stack_name: { get_param: "OS::stack_name" }
           db_name: { get_param: db_name }
           db_user: { get_param: db_user }
-          clouddb_flavor: { get_param: clouddb_flavor }
-          clouddb_disk: { get_param: clouddb_disk }
+          clouddb_flavor: { get_param: database_flavor }
+          clouddb_disk: { get_param: database_disk }
           server_image: { get_param: server_image }
           server_flavor: { get_param: db_server_flavor }
-          ssh_key: { get_param: ssh_key }
+          ssh_key: { get_resource: ssh_key }
           ansible_source: { get_param: ansible_source }
   #Software Configurations
   upload_role_config:
@@ -271,7 +271,7 @@ resources:
         holland_mysql_host: { get_attr: [database, mysql_host] }
         holland_create_user: "no"
         phpmyadmin_install: { get_param: php_myadmin }
-        phpmyadmin_host: { get_attr: [lamp_database, hostname] }
+        phpmyadmin_host: { get_attr: [database, mysql_host] }
         phpmyadmin_user: { get_param: db_user }
         phpmyadmin_pass: { get_attr: [database, mysql_pass] }
       config:

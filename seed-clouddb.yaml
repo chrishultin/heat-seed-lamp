@@ -37,8 +37,8 @@ resources:
           template: stack_Database
           params:
             stack: { get_param: "OS::stack_name" }
-      flavor: { get_param: database_flavor }
-      size: { get_param: database_disk }
+      flavor: { get_param: clouddb_flavor }
+      size: { get_param: clouddb_disk }
       datastore_type: mysql
       databases:
       - name: { get_param: db_name }
