@@ -273,7 +273,7 @@ resources:
         phpmyadmin_install: { get_param: php_myadmin }
         phpmyadmin_host: { get_attr: [database, mysql_host] }
         phpmyadmin_user: { get_param: db_user }
-        phpmyadmin_pass: { get_attr: [database, mysql_pass] }
+        phpmyadmin_pass: { get_attr: [database, mysql_password] }
       config:
         get_resource: lamp_config
       server:

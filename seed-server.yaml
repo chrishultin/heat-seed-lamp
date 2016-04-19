@@ -59,11 +59,8 @@ resources:
           connection: local
           roles:
           - common
-          - apache
-          - php
           - mysql
           - holland
-          - phpmyadmin
   #DB Software deployment
   deploy_database:
     type: OS::Heat::SoftwareDeployment
@@ -81,10 +78,6 @@ resources:
         holland_mysql_password: {  get_attr: [holland_pass, value] }
         holland_mysql_host: localhost
         holland_create_user: "yes"
-        phpmyadmin_install: { get_param: php_myadmin }
-        phpmyadmin_host: localhost
-        phpmyadmin_user: { get_param: db_user }
-        phpmyadmin_pass: { get_attr: [database_pass, value] }
       config:
         get_resource: database_config
       server:
