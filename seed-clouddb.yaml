@@ -36,7 +36,7 @@ resources:
         str_replace:
           template: stack_Database
           params:
-            stack: { get_param: "OS::stack_name" }
+            stack: { get_param: stack_name }
       flavor: { get_param: clouddb_flavor }
       size: { get_param: clouddb_disk }
       datastore_type: mysql

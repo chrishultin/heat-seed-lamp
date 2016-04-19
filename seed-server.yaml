@@ -37,10 +37,10 @@ resources:
         str_replace:
           template: stack-Database
           params:
-            stack: { get_param: "OS::stack_name" }
+            stack: { get_param: stack_name }
       image: { get_param: server_image }
       flavor: { get_param: server_flavor }
-      key_name: { get_resource: ssh_key }
+      key_name: { get_param: ssh_key }
       software_config_transport: POLL_TEMP_URL
       config_drive: true
       user_data_format: SOFTWARE_CONFIG
