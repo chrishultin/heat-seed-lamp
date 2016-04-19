@@ -173,22 +173,25 @@ resources:
       save_private_key: true
   #Database
   database:
-    type:
-      str_replace:
-        template: URL/dbtype.yaml
-        params:
-          URL: www.something.com
-          dbtype: { get_param: db_type }
+    type: OS::Heat::ResourceGroup
     properties:
-      stack_name: { get_param: "OS::stack_name" }
-      db_name: { get_param: db_name }
-      db_user: { get_param: db_user }
-      clouddb_flavor: { get_param: clouddb_flavor }
-      clouddb_disk: { get_param: clouddb_disk }
-      server_image: { get_param: server_image }
-      server_flavor: { get_param: db_server_flavor }
-      ssh_key: { get_param: ssh_key }
-      ansible_source: { get_param: ansible_source }
+      count: 1
+      resource_def:
+        type:
+          str_replace:
+            template: https://raw.githubusercontent.com/chrishultin/heat-seed-lamp/master/seed-dbtype.yaml
+            params:
+              dbtype: { get_param: db_type }
+        properties:
+          stack_name: { get_param: "OS::stack_name" }
+          db_name: { get_param: db_name }
+          db_user: { get_param: db_user }
+          clouddb_flavor: { get_param: clouddb_flavor }
+          clouddb_disk: { get_param: clouddb_disk }
+          server_image: { get_param: server_image }
+          server_flavor: { get_param: db_server_flavor }
+          ssh_key: { get_param: ssh_key }
+          ansible_source: { get_param: ansible_source }
   #Software Configurations
   upload_role_config:
     type: OS::Heat::SoftwareConfig
@@ -264,13 +267,13 @@ resources:
         apache_default_domain: { get_param: lamp_url }
         tz: "America/Chicago"
         holland_mysql_user: "holland"
-        holland_mysql_password: {  get_attr: [holland_pass, value] }
-        holland_mysql_host: { get_attr: [lamp_database, hostname] }
+        holland_mysql_password: {  get_attr: [database, holland_pass] }
+        holland_mysql_host: { get_attr: [database, mysql_host] }
         holland_create_user: "no"
         phpmyadmin_install: { get_param: php_myadmin }
         phpmyadmin_host: { get_attr: [lamp_database, hostname] }
         phpmyadmin_user: { get_param: db_user }
-        phpmyadmin_pass: { get_attr: [database_pass, value] }
+        phpmyadmin_pass: { get_attr: [database, mysql_pass] }
       config:
         get_resource: lamp_config
       server:

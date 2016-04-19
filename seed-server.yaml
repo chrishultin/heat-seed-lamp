@@ -127,3 +127,6 @@ outputs:
   root_pass:
     value:
       get_attr: [root_pass, value]
+  holland_pass:
+    value:
+      get_attr: [holland_pass, value]

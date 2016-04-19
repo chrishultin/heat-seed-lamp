@@ -60,3 +60,6 @@ outputs:
       get_attr: [lamp_database, hostname]
   root_pass:
     value: ''
+  holland_pass:
+    value:
+      get_attr: [holland_pass, value]
