@@ -68,7 +68,6 @@ resources:
     properties:
       signal_transport: TEMP_URL_SIGNAL
       input_values:
-        apache_default_domain: { get_param: lamp_url }
         tz: "America/Chicago"
         mysql_root_password: { get_attr: [root_pass, value] }
         mysql_default_user: { get_param: db_user }
