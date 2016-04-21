@@ -26,6 +26,13 @@ parameter_groups:
   - server_image
   - secondary_template
   - ansible_source
+- label: Cloud DB Settings
+  parameters:
+  - database_disk
+  - database_flavor
+- label: Server DB Settings
+  paramters:
+  - db_server_flavor
 parameters:
   #LAMP Customization
   lamp_url:
