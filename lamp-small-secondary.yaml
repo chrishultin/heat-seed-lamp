@@ -47,6 +47,8 @@ parameters:
     label: Ansible Tarball
     description: The Ansible Roles will be pulled from the location provided
     immutable: true
+  cloud_network:
+    type: string
 resources:
   upload_role_config:
     type: OS::Heat::SoftwareConfig
@@ -112,6 +114,10 @@ resources:
       software_config_transport: POLL_TEMP_URL
       config_drive: true
       user_data_format: SOFTWARE_CONFIG
+      networks:
+        - network: 00000000-0000-0000-0000-000000000000
+        - network: 11111111-1111-1111-1111-111111111111
+        - network: { get_param: cloud_network }
       metadata:
         rax-heat: { get_param: "parent_stack_id" }
         build_config: "monitoring_defaults"
