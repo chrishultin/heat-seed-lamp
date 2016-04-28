@@ -85,7 +85,7 @@ resources:
             password: { get_attr: [database_pass, value] }
             privs:
               str_replace:
-                template: database.*:ALL
+                template: 'database.*:ALL'
                 params:
                   database: { get_param: db_name }
             hosts: '%'
