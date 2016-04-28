@@ -61,6 +61,13 @@ resources:
           - common
           - mysql
           - holland
+      inputs:
+      - default: "[]"
+        name: mysql_users
+        type: Json
+      - default: "[]"
+        name: mysql_dbs
+        type: CommaDelimitedList
   #DB Software deployment
   deploy_database:
     type: OS::Heat::SoftwareDeployment
