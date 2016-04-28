@@ -83,10 +83,11 @@ resources:
         mysql_users:
           - name: { get_param: db_user }
             password: { get_attr: [database_pass, value] }
-            privs: str_replace:
-              template: database.*:ALL
-              params:
-                database: { get_param: db_name }
+            privs:
+              str_replace:
+                template: database.*:ALL
+                params:
+                  database: { get_param: db_name }
             hosts: '%'
           - name: { get_param: db_user }
             password: { get_attr: [database_pass, value] }

@@ -31,7 +31,7 @@ parameter_groups:
   - database_disk
   - database_flavor
 - label: Server DB Settings
-  paramters:
+  parameters:
   - db_server_flavor
 parameters:
   #LAMP Customization
