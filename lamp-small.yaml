@@ -283,13 +283,13 @@ resources:
         apache_default_domain: { get_param: lamp_url }
         tz: "America/Chicago"
         holland_mysql_user: "holland"
-        holland_mysql_password: {  get_attr: [database, holland_pass] }
-        holland_mysql_host: { get_attr: [database, mysql_host] }
+        holland_mysql_password: { list_join: [ '', { get_attr: [database, holland_pass] } ] }
+        holland_mysql_host: { list_join: [ '', { get_attr: [database, mysql_host] } ] }
         holland_create_user: "no"
         phpmyadmin_install: { get_param: php_myadmin }
-        phpmyadmin_host: { get_attr: [database, mysql_host] }
+        phpmyadmin_host: { list_join: [ '', { get_attr: [database, mysql_host] } ] }
         phpmyadmin_user: { get_param: db_user }
-        phpmyadmin_pass: { get_attr: [database, mysql_password] }
+        phpmyadmin_pass: { list_join: [ '', { get_attr: [database, mysql_password] } ] }
       config:
         get_resource: lamp_config
       server:
