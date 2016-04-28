@@ -494,15 +494,13 @@ outputs:
     value: {get_param: db_name }
   mysql_password:
     description: Database Password
-    value:
-      get_attr: [database, mysql_password]
+    value: { list_join: [ '', { get_attr: [database, mysql_password] } ] }
   mysql_host:
     description: Database Host
-    value:
-      get_attr: [database, mysql_host]
+    value: { list_join: [ '', { get_attr: [database, mysql_host] } ] }
   root_pass:
     description: MySQL Root Password (if configured)
-    value: { get_attr: [database, root_pass] }
+    value: { list_join: [ '', { get_attr: [database, root_pass] } ] }
   ssh_private_key:
     description: SSH Private Key
     value:
