@@ -88,11 +88,11 @@ resources:
                 template: 'database.*:ALL'
                 params:
                   database: { get_param: db_name }
-            hosts: '%'
+            hosts: ['%']
           - name: { get_param: db_user }
             password: { get_attr: [database_pass, value] }
             privs: 'phpmyadmin.*:ALL'
-            hosts: '%'
+            hosts: ['%']
         mysql_dbs:
           - { get_param: db_name }
           - 'phpmyadmin'
