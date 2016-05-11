@@ -21,6 +21,8 @@ parameters:
     type: string
   ansible_source:
     type: string
+  cloud_network:
+    type: string
 
 resources:
   database_pass:
