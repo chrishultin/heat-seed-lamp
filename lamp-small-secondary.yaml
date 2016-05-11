@@ -41,9 +41,6 @@ parameters:
     type: string
   php_myadmin:
     type: boolean
-  ansible_branch:
-    type: string
-    default: stable
   ansible_source:
     type: string
     default: http://catalog.rs-heat.com/ansible-roles/ansible-roles.tar.gz
