@@ -161,7 +161,7 @@ parameters:
     description: CIDR notation network and subnet mask to use for the Cloud Network
   secondary_template:
     type: string
-    default: http://catalog.rs-heat.com/lamp-small/lamp-small-secondary.yaml
+    default: https://raw.githubusercontent.com/chrishultin/heat-seed-lamp/master/lamp-small-secondary.yaml
     label: Secondary Template
     description: Template to use for secondary servers
     immutable: true
